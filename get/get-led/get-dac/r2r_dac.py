@@ -21,8 +21,9 @@ class R2R_DAC:
         a = [int(element) for element in bin(value)[2:].zfill(8)] 
         GPIO.output(self.gpio_bits, a)
 if __name__ == "__main__":
+    dac = R2R_DAC([16, 20, 21, 25, 26, 17, 27, 22], 3.18 , True)
     try:
-        dac = R2R_DAC([16, 20, 21, 25, 26, 17, 27, 22], 3.18 , True)
+        
         while True:
             try:
                 voltage = float(input("Введите напряжение в Вольтах: "))

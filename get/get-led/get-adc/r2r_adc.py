@@ -17,13 +17,13 @@ class R2R_ADC:
         GPIO.output(self.bits_gpio, 0)
         GPIO.cleanup()
     def number_to_dac(self,number):
-        a = [int(element) for element in bin(value)[2:].zfill(8)] 
+        a = [int(element) for element in bin(number)[2:].zfill(8)] 
         GPIO.output(self.bits_gpio, a)
     def sequential_counting_adc(self):
         max_value = 2 ** len(self.bits_gpio)-1
         for value in range(max_value + 1):
             self.number_to_dac(value)
-            time.sleep(0.01)
+            time.sleep(self.compare_time)
             a = GPIO.input(self.comp_gpio)
             if a == GPIO.HIGH:
                 return value
@@ -35,11 +35,11 @@ class R2R_ADC:
         return voltage
 
 if __name__== "__main__":
-    dac = R2R_ADC([16, 20, 21, 25, 26, 17, 27, 22], 3.18 , True)
+    dac = R2R_ADC(dynamic_range=3.18, compare_time = 0.01, verbose = True)
     try:
         while True:
                 voltage = dac.get_sc_voltage()
-                print("Измеренное напряжение :{voltage:.3f}В")
+                print(voltage)
                 time.sleep(0.1)                
     finally:
         dac.deinit()

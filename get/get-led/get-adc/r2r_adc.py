@@ -60,6 +60,6 @@ if __name__== "__main__":
         while True:
                 voltage = dac.get_sar_voltage()
                 print(voltage)
-                time.sleep(1.0)                
+                time.sleep(0.10)                
     finally:
         dac.deinit()

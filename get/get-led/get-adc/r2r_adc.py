@@ -33,20 +33,20 @@ class R2R_ADC:
         max_value = 2 ** len(self.bits_gpio)-1
         voltage = (digital_code/max_value)*self.dynamic_range
         return voltage
+    def binsearch(self, min, max):
+        return int((max +min)/2)
     def succesive_approximation_adc(self):
-        value = 0
-        num_bits = len(self.bits_gpio)
-        for i in range(num_bits):
-            bit_weight = 1 <<(num_bits-1-i)
-            test_value = value | bit_weight 
-            self.number_to_dac(test_value)
+        max = 256
+        min = 0
+        for value in range(8):
+            mid=self.binsearch(min,max)
+            self.number_to_dac(mid)
             time.sleep(self.compare_time)
-            comparator_result = GPIO.input(self.comp_gpio)
-            if self.verbose:
-                print(f"Шаг {i+1}: Тестируем код {test_value} ")
-            if comparator_result == GPIO.LOW:
-                value = test_value
-        return value
+            if GPIO.input(self.comp_gpio)==1:
+                max = mid
+            else:
+                min = mid
+        return mid
     def get_sar_voltage(self):
         digital_code = self.succesive_approximation_adc()
         max_value = 2**len(self.bits_gpio)-1

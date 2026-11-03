@@ -15,7 +15,7 @@ class MCP3021:
         number = (upper_data_byte << 6) | (lower_data_byte >> 2)
         if self.verbose:
             print(f"Принятые данные: {data}, Старший байт: {upper_data_byte:x}, Младший байт: {lower_data_byte:x}, Число: {number}")
-            return number 
+        return number 
     def get_sc_voltage(self):
         digital_code = self.get_number()
         voltage = (digital_code/1024)*self.dynamic_range
